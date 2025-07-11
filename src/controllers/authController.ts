@@ -3,10 +3,10 @@ import { Otp } from '../models/Otp';
 import { Agent } from '../models/Agent';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
-import redis from 'redis';
+import { createClient } from 'redis';
 import bcrypt from 'bcryptjs';
 
-const redisClient = redis.createClient({ url: process.env.REDIS_URL });
+const redisClient = createClient({ url: process.env.REDIS_URL });
 redisClient.connect();
 
 const OTP_EXPIRY_MINUTES = 5;
@@ -61,7 +61,7 @@ export const authController = {
     if (!agent) return res.status(404).json({ error: 'Agent not found' });
     // Issue JWTs
     const payload = { agentId: agent.id, role: 'agent' };
-    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
     const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '7d' });
     // (Optional: store refreshToken in DB for revocation)
     res.json({ accessToken, refreshToken, agent: { id: agent.id, phone: agent.phone, name: agent.name } });

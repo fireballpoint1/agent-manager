@@ -1,7 +1,51 @@
 import express from 'express';
 import { taskController } from '../controllers/taskController';
+import { authenticateJWT } from '../middleware/auth';
+import { TaskDto } from '../dto/TaskDto';
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     TaskDto:
+ *       type: object
+ *       required:
+ *         - agentId
+ *       properties:
+ *         agentId:
+ *           type: integer
+ *         lat:
+ *           type: number
+ *         lng:
+ *           type: number
+ */
+/**
+ * @swagger
+ * /tasks:
+ *   post:
+ *     summary: Create a new task for a given agentId (status will always be 'assigned')
+ *     tags: [Tasks]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             allOf:
+ *               - $ref: '#/components/schemas/TaskDto'
+ *     responses:
+ *       201:
+ *         description: Task created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ */
+router.post('/', taskController.create);
+
+// All /tasks routes below require authentication
+router.use(authenticateJWT);
 
 /**
  * @swagger
@@ -30,13 +74,8 @@ const router = express.Router();
  *   get:
  *     summary: List agent’s assigned tasks
  *     tags: [Tasks]
- *     parameters:
- *       - in: query
- *         name: agentId
- *         schema:
- *           type: integer
- *         required: false
- *         description: Agent ID (defaults to 1 if not provided)
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of assigned tasks
@@ -55,6 +94,8 @@ router.get('/assigned', taskController.listAssigned);
  *   post:
  *     summary: Begin a visit, validate geolocation (~100m radius)
  *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -97,6 +138,8 @@ router.post('/:id/start-visit', taskController.startVisit);
  *   post:
  *     summary: Mark task as in-progress
  *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -125,6 +168,8 @@ router.post('/:id/check-in', taskController.checkIn);
  *   post:
  *     summary: Complete task
  *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -153,6 +198,8 @@ router.post('/:id/complete', taskController.complete);
  *   post:
  *     summary: Push offline-saved task data
  *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -161,7 +208,6 @@ router.post('/:id/complete', taskController.complete);
  *             type: object
  *             required:
  *               - offlineTasks
- *               - agentId
  *             properties:
  *               offlineTasks:
  *                 type: array
@@ -172,8 +218,6 @@ router.post('/:id/complete', taskController.complete);
  *                       type: integer
  *                     status:
  *                       type: string
- *               agentId:
- *                 type: integer
  *     responses:
  *       200:
  *         description: Tasks synced

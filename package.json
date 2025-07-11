@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/app.js",
+    "build": "tsc",
+    "dev": "ts-node src/app.ts",
+    "migrate": "ts-node src/db/migrate.ts"
   },
   "keywords": [],
   "author": "",

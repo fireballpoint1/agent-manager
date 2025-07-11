@@ -1,0 +1,79 @@
+Compose now can delegate build to bake for better performances
+Just set COMPOSE_BAKE=true
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [app internal] load build definition from Dockerfile
+#1 transferring dockerfile: 512B done
+#1 DONE 0.0s
+
+#2 [app internal] load metadata for docker.io/library/node:18-alpine
+#2 DONE 2.6s
+
+#3 [app internal] load .dockerignore
+#3 transferring context: 280B done
+#3 DONE 0.0s
+
+#4 [app internal] load build context
+#4 transferring context: 818B done
+#4 DONE 0.0s
+
+#5 [app 1/9] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#5 resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e 0.0s done
+#5 DONE 0.0s
+
+#6 [app 2/9] WORKDIR /usr/src/app
+#6 CACHED
+
+#7 [app 3/9] COPY package*.json ./
+#7 DONE 0.0s
+
+#8 [app 4/9] COPY tsconfig.json ./
+#8 DONE 0.0s
+
+#9 [app 5/9] RUN npm install
+#9 15.87 npm warn deprecated lodash.isequal@4.5.0: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
+#9 15.87 npm warn deprecated lodash.get@4.4.2: This package is deprecated. Use the optional chaining (?.) operator instead.
+#9 16.93 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+#9 17.03 npm warn deprecated glob@7.1.6: Glob versions prior to v9 are no longer supported
+#9 28.08 
+#9 28.08 added 187 packages, and audited 188 packages in 28s
+#9 28.08 
+#9 28.08 17 packages are looking for funding
+#9 28.08   run `npm fund` for details
+#9 28.08 
+#9 28.08 found 0 vulnerabilities
+#9 28.08 npm notice
+#9 28.08 npm notice New major version of npm available! 10.8.2 -> 11.4.2
+#9 28.08 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.4.2
+#9 28.08 npm notice To update run: npm install -g npm@11.4.2
+#9 28.08 npm notice
+#9 DONE 28.3s
+
+#10 [app 6/9] RUN npm install -g typescript
+#10 0.735 
+#10 0.735 added 1 package in 511ms
+#10 DONE 0.8s
+
+#11 [app 7/9] COPY src ./src
+#11 DONE 0.0s
+
+#12 [app 8/9] RUN tsc
+#12 DONE 1.7s
+
+#13 [app 9/9] COPY .env* ./
+#13 DONE 0.0s
+
+#14 [app] exporting to image
+#14 exporting layers
+#14 exporting layers 2.7s done
+#14 exporting manifest sha256:e149e8c1e83c058c3abed5a55df0363b88eb201e9179badaa2c87b14bcfe0dd1 done
+#14 exporting config sha256:ee966b9bae87066a73859047999cb70feda7771012379e5cd7e869e1ec689755 done
+#14 exporting attestation manifest sha256:70918ef66854a0bff7f330a8611580c0390b8fab5347a91f698a932214462c6e done
+#14 exporting manifest list sha256:36d81421326718d0181a1d88861506f1f5337e72658fe8321065757c3220fbe7 done
+#14 naming to docker.io/library/assessment-app:latest done
+#14 unpacking to docker.io/library/assessment-app:latest
+#14 unpacking to docker.io/library/assessment-app:latest 1.0s done
+#14 DONE 3.7s
+
+#15 [app] resolving provenance for metadata file
+#15 DONE 0.0s

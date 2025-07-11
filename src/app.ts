@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { sequelize } from './db';
-import redis from 'redis';
+import { createClient } from 'redis';
 import taskRoutes from './routes/taskRoutes';
 import authRoutes from './routes/authRoutes';
 import swaggerUi from 'swagger-ui-express';
@@ -23,6 +23,16 @@ const swaggerSpec = swaggerJsdoc({
     servers: [
       { url: 'http://localhost:3000', description: 'Local server' },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
   },
   apis: ['./src/routes/*.ts'],
 });
@@ -38,7 +48,7 @@ sequelize.authenticate()
   .catch(err => console.error('Sequelize connection error:', err));
 
 // Redis setup
-const redisClient = redis.createClient({
+const redisClient = createClient({
   url: process.env.REDIS_URL,
 });
 redisClient.connect()
